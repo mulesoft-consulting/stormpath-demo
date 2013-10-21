@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ajax="http://www.mulesoft.org/schema/mule/ajax" xmlns:json="http://www.mulesoft.org/schema/mule/json"
+    xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:stormpath="http://www.mulesoft.org/schema/mule/stormpath"
+    xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ajax http://www.mulesoft.org/schema/mule/ajax/current/mule-ajax.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mule/stormpath/current/mule-stormpath.xsd">
+
+    <configuration doc:name="Configuration">
+        <expression-language>
+            <import class="org.mule.modules.stormpath.StormpathUtils" />
+            <import class="org.mule.modules.stormpath.model.Account" />
+            <import class="org.mule.modules.stormpath.model.Email" />
+        </expression-language>
+    </configuration>
+
+    <stormpath:config name="Stormpath" apiKeyId="${stormpath.apiKeyId}"
+        apiKeySecret="${stormpath.apiKeySecret}" doc:name="Stormpath" />
+
+    <flow name="attemptLogin" doc:name="attemptLogin">
+        <http:inbound-endpoint exchange-pattern="request-response"
+            host="${http.host}" port="${http.port}" path="demo/api/attempt-login"
+            doc:name="HTTP" />
+
+        <http:body-to-parameter-map-transformer
+            doc:name="Body to Parameter Map" />
+
+        <set-payload
+            value="#[StormpathUtils.createBasicLoginAttempt(message.payload.username, message.payload.password)]"
+            doc:name="Set Payload" />
+
+        <json:object-to-json-transformer doc:name="Object to JSON" />
+        <stormpath:attempt-login config-ref="Stormpath"
+            applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
+        <json:object-to-json-transformer doc:name="Object to JSON" />
+
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-payload value="#[exception.cause.message]" doc:name="Set Payload" />
+        </catch-exception-strategy>
+    </flow>
+
+    <flow name="createAccount" doc:name="createAccount">
+        <http:inbound-endpoint exchange-pattern="request-response"
+            host="${http.host}" port="${http.port}" path="demo/api/create-account"
+            doc:name="HTTP" />
+
+        <http:body-to-parameter-map-transformer
+            doc:name="Body to Parameter Map" />
+
+        <expression-component doc:name="Expression"><![CDATA[
+          message.payload =
+            new Account()
+               .withUsername(message.payload.username)
+               .withEmail(message.payload.email)
+               .withPassword(message.payload.password)
+               .withGivenName(message.payload.givenName)
+               .withSurname(message.payload.surname);
+        ]]></expression-component>
+
+        <json:object-to-json-transformer doc:name="Object to JSON" />
+        <stormpath:create-account config-ref="Stormpath"
+            directoryId="${stormpath.directoryId}" doc:name="Stormpath" />
+        <json:object-to-json-transformer doc:name="Object to JSON" />
+
+        <catch-exception-strategy doc:name="Catch_Exception_Strategy">
+            <set-payload value="#[exception.cause.message]" doc:name="Set Payload" />
+        </catch-exception-strategy>
+    </flow>
+
+    <flow name="resetPassword" doc:name="resetPassword">
+        <http:inbound-endpoint exchange-pattern="request-response"
+            host="${http.host}" port="${http.port}" path="demo/api/reset-password"
+            doc:name="HTTP" />
+
+        <http:body-to-parameter-map-transformer
+            doc:name="Body to Parameter Map" />
+
+        <set-payload value="#[new Email().withEmail(message.payload.email)]"
+            doc:name="Set Payload" />
+
+        <json:object-to-json-transformer doc:name="Object to JSON" />
+        <stormpath:create-password-reset-token
+            config-ref="Stormpath" applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
+        <json:object-to-json-transformer doc:name="Object to JSON" />
+
+        <catch-exception-strategy doc:name="Catch_Exception_Strategy">
+            <set-payload value="#[exception.cause.message]" doc:name="Set Payload" />
+        </catch-exception-strategy>
+    </flow>
+
+    <flow name="homePage" doc:name="homePage">
+        <http:inbound-endpoint exchange-pattern="request-response"
+            host="${http.host}" port="${http.port}" path="demo" doc:name="HTTP" />
+        <http:static-resource-handler resourceBase="${app.home}/docroot"
+            defaultFile="index.html" doc:name="HTTP Static Resource Handler" />
+    </flow>
+</mule>

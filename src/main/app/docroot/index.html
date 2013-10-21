@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+
+<title>Stormpath AJAX Demo</title>
+
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.2/themes/redmond/jquery-ui.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" />
+
+<style type="text/css">
+body { color: #333; font-family: "Open Sans", Arial, Helvetica, sans-serif; font-size: 14px; }
+
+#wrapper { width: 960px; margin: 20px auto; }
+
+#header { overflow: hidden; position: relative; margin-bottom: 10px; height: 60px;
+  font-size: 24px; border-bottom: 2px solid rgb(53, 114, 166); }
+#mulesoft-logo { width: 145px; height: 43px; padding-bottom: 6px;
+  position: absolute; bottom: 0; left: 0; }
+#stormpath-logo { width: 132px; height: 25px; padding-bottom: 6px;
+  position: absolute; bottom: 0; right: 0; }
+#demo { font-size: 18px; margin-bottom: 30px; }
+
+div.stormpath-function { width: 600px; margin: 20px auto; padding: 10px;
+  border: 1px solid #999; text-align: center; }
+
+.ui-widget { font-size: 14px; }
+.ui-widget-header { margin-bottom: 10px; }
+fieldset { border: 0; text-align: left; padding: 0; }
+label { float: left; width: 100px; }
+input { display: block; width: 450px; margin-bottom: 6px; }
+select { display: block; width: 450px; margin-bottom: 6px; }
+#form-login-actions { margin-top: 10px; text-align: center; }
+.resource { margin-bottom: 20px; }
+
+#message { display: none; }
+</style>
+
+<script type="text/javascript">
+
+var urlBase = "api/";
+
+$(document).ready(function() {
+
+  // buttons
+  //
+  $("#form-login-submit").button()
+    .click(function(event) {
+      attemptLogin();
+      event.preventDefault();
+    }
+  );
+  $("#button-create-account").button()
+    .click(function(event) {
+      $("#create-account").dialog("open");
+    }
+  );
+  $("#button-reset").button()
+    .click(function() {
+      $("#reset-password").dialog("open");
+    }
+  );
+
+  // dialogs
+  //
+  $("#create-account").dialog({
+    autoOpen: false,
+    width: 600,
+    modal: true,
+    buttons: {
+      "Create Account": createAccount,
+      "Cancel": function() {
+        $(this).dialog("close");
+      }
+    }
+  });
+  $("#reset-password").dialog({
+    autoOpen: false,
+    width: 600,
+    modal: true,
+    buttons: {
+      "Reset Password": resetPassword,
+      "Cancel": function() {
+        $(this).dialog("close");
+      }
+    }
+  });
+  $("#message").dialog({
+    autoOpen: false,
+    width: 400,
+    modal: true,
+    buttons: {
+      "OK": function() {
+        $(this).dialog("close");
+      }
+    }
+  });
+
+  // forms
+  //
+  $(".form").submit(function(event) {
+    event.preventDefault();
+  });
+});
+
+function attemptLogin() {
+  console.log("attempt login");
+
+  var data = {
+    username: $("#form-login-username").val(),
+    password: $("#form-login-password").val()
+  };
+
+  $.ajax({
+    url: urlBase + "attempt-login",
+    type: "POST",
+    data: data,
+    success: function(data, textStatus, jqXHR) {
+      console.log("attempt login success");
+      if (data.account) { // authenticated
+        showMessage("Login successful!");
+      } else if (data.message) { // stormpath exception
+        showMessage(data.message);
+      } else { // error
+        showMessage(data);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("reset password error");
+      showMessage(textStatus);
+    }
+  });
+}
+
+function createAccount() {
+  console.log("create account");
+
+  var data = {
+    username: $("#form-account-username").val(),
+    email: $("#form-account-email").val(),
+    password: $("#form-account-password").val(),
+    givenName: $("#form-account-givenname").val(),
+    surname: $("#form-account-surname").val()
+  };
+
+  $.ajax({
+    url: urlBase + "create-account",
+    type: "POST",
+    data: data,
+    success: function(data, textStatus, jqXHR) {
+      console.log("create account success");
+      if (data.username) { // account created
+        showMessage("Account created (status: " + data.status + "). " +
+          "If you have activated the accout registration and verification workflow, " +
+          "please check your email for further instructions.");
+      } else if (data.message) { // stormpath exception
+        showMessage(data.message);
+      } else { // error
+        showMessage(data);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("create account error");
+      showMessage(textStatus);
+    }
+  });
+
+  $("#create-account").dialog("close");
+}
+
+function resetPassword() {
+  console.log("reset password");
+
+  var data = {
+    email: $("#form-reset-email").val()
+  };
+
+  $.ajax({
+    url: urlBase + "reset-password",
+    type: "POST",
+    data: data,
+    success: function(data, textStatus, jqXHR) {
+      console.log("reset password success");
+      if (data.account) { // password reset
+        showMessage("You have been emailed password reset instructions.");
+      } else if (data.message) { // stormpath exception
+        showMessage(data.message);
+      } else { // error
+        showMessage(data);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("reset password error");
+      showMessage(textStatus);
+    }
+  });
+
+  $("#reset-password").dialog("close");
+}
+
+function showMessage(msg) {
+  console.log("show message");
+
+  $("#message-text").text(msg);
+  $("#message").dialog("open");
+}
+</script>
+
+</head>
+<body>
+
+<div id="wrapper">
+
+<div id="header">
+<img id="mulesoft-logo" src="mulesoft.gif" alt="MuleSoft" />
+<img id="stormpath-logo" src="stormpath.png" alt="Stormpath" />
+</div>
+
+<div id="demo">
+Stormpath Cloud Connector Demonstration
+</div>
+
+<div id="login" class="stormpath-function">
+<form id="form-login" class="form" action="#">
+<fieldset>
+<label for="form-login-username">Username:</label>
+<input type="text" name="form-login-username" id="form-login-username" class="ui-widget-content ui-corner-all" />
+<label for="form-login-password">Password:</label>
+<input type="password" name="form-login-password" id="form-login-password" class="ui-widget-content ui-corner-all" />
+<div id="form-login-actions">
+<button name="form-login-submit" id="form-login-submit">Login</button>
+</div>
+</fieldset>
+</form>
+</div><!-- login -->
+
+<div class="stormpath-function">
+<button id="button-create-account">Create new account</button>
+</div>
+
+<div id="create-account" title="Create Account">
+<form id="form-account" class="form" action="#">
+<fieldset>
+<label for="form-account-username">Username:</label>
+<input type="text" name="form-account-username" id="form-account-username" class="ui-widget-content ui-corner-all" />
+<label for="form-account-givenname">First Name:</label>
+<input type="text" name="form-account-givenname" id="form-account-givenname" class="ui-widget-content ui-corner-all" />
+<label for="form-account-surname">Last Name:</label>
+<input type="text" name="form-account-surname" id="form-account-surname" class="ui-widget-content ui-corner-all" />
+<label for="form-account-email">Email:</label>
+<input type="text" name="form-account-email" id="form-account-email" class="ui-widget-content ui-corner-all" />
+<label for="form-account-password">Password:</label>
+<input type="password" name="form-account-password" id="form-account-password" class="ui-widget-content ui-corner-all" />
+<small>Passwords must contain upper and lower case characters, at least one number and be 8 characters or longer.</small>
+</fieldset>
+</form>
+</div><!-- create-account -->
+
+<div class="stormpath-function">
+<button id="button-reset">Reset your password</button>
+</div>
+
+<div id="reset-password" title="Reset Password">
+<form id="form-reset" class="form" action="#">
+<fieldset>
+<label for="form-reset-email">Email:</label>
+<input type="text" name="form-reset-email" id="form-reset-email" class="ui-widget-content ui-corner-all" />
+</fieldset>
+</form>
+</div><!-- reset-password -->
+
+<div id="message">
+<div id="message-text"></div>
+</div>
+
+</div><!-- wrapper -->
+
+</body>
+</html>
