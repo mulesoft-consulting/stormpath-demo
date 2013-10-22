@@ -40,7 +40,6 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
             value="#[StormpathUtils.createBasicLoginAttempt(message.payload.username, message.payload.password)]"
             doc:name="Set Payload" />
 
-        <json:object-to-json-transformer doc:name="Object to JSON" />
         <stormpath:attempt-login config-ref="Stormpath"
             applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
         <json:object-to-json-transformer doc:name="Object to JSON" />
@@ -67,7 +66,6 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
                .withSurname(message.payload.surname);
         ]]></expression-component>
 
-        <json:object-to-json-transformer doc:name="Object to JSON" />
         <stormpath:create-account config-ref="Stormpath"
             directoryId="${stormpath.directoryId}" doc:name="Stormpath" />
         <json:object-to-json-transformer doc:name="Object to JSON" />
@@ -87,7 +85,6 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
         <set-payload value="#[new Email().withEmail(message.payload.email)]"
             doc:name="Set Payload" />
 
-        <json:object-to-json-transformer doc:name="Object to JSON" />
         <stormpath:create-password-reset-token
             config-ref="Stormpath" applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
         <json:object-to-json-transformer doc:name="Object to JSON" />

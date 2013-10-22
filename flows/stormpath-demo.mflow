@@ -34,7 +34,7 @@
             </lane>
         </compartment>
     </global-element>
-    <flow SubFlow="false" name="attemptLogin" entity-id="824db989-3471-4908-8df1-2845ad8152b5">
+    <flow SubFlow="false" name="attemptLogin" entity-id="83b16193-0cdb-4257-9b10-af2746e6fcd3">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -90,6 +90,15 @@
                     <property name="auxiliary;index" value="12"/>
                 </properties>
             </pattern>
+            <pattern name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="applicationId" value="${stormpath.applicationId}"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/stormpath/attempt-login"/>
+                    <property name="config-ref" value="Stormpath"/>
+                    <property name="auxiliary;index" value="13"/>
+                </properties>
+            </pattern>
             <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
@@ -99,45 +108,24 @@
                     <property name="encoding"/>
                     <property name="mapper-ref"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="13"/>
-                </properties>
-            </pattern>
-            <pattern name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#2">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="applicationId" value="${stormpath.applicationId}"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/stormpath/attempt-login"/>
-                    <property name="config-ref" value="Stormpath"/>
                     <property name="auxiliary;index" value="14"/>
-                </properties>
-            </pattern>
-            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#2">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="sourceClass"/>
-                    <property name="returnClass"/>
-                    <property name="ignoreBadInput"/>
-                    <property name="encoding"/>
-                    <property name="mapper-ref"/>
-                    <property name="mimeType"/>
-                    <property name="auxiliary;index" value="15"/>
                 </properties>
             </pattern>
             <pattern name="Extract Cause Message Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/exception-strategy" entity-id="Reference Exception Strategy#1">
                 <properties>
                     <property name="ref" value="extractCauseMessageExceptionStrategy"/>
-                    <property name="auxiliary;index" value="16"/>
+                    <property name="auxiliary;index" value="15"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="createAccount" entity-id="a3530639-8b13-4c03-992b-2e58ea8630d2">
+    <flow SubFlow="false" name="createAccount" entity-id="7fcc79d1-8de5-4855-a201-1d3b8e3d7779">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="17"/>
+            <property name="auxiliary;index" value="16"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
             <graphicalData x="0" y="0" width="0" height="0"/>
@@ -166,7 +154,7 @@
                     <property name="user"/>
                     <property name="responseTimeout"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="18"/>
+                    <property name="auxiliary;index" value="17"/>
                     <property name="connector-ref"/>
                 </properties>
             </endpoint>
@@ -177,7 +165,7 @@
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="19"/>
+                    <property name="auxiliary;index" value="18"/>
                 </properties>
             </pattern>
             <pattern name="Expression" type="http://www.mulesoft.org/schema/mule/core/expression-component" entity-id="Expression#1">
@@ -186,10 +174,19 @@
                     <property name="expression" value="&#xA;          message.payload =&#xA;            new Account()&#xA;               .withUsername(message.payload.username)&#xA;               .withEmail(message.payload.email)&#xA;               .withPassword(message.payload.password)&#xA;               .withGivenName(message.payload.givenName)&#xA;               .withSurname(message.payload.surname);&#xA;        "/>
                     <property name="file"/>
                     <property name="evaluator"/>
+                    <property name="auxiliary;index" value="19"/>
+                </properties>
+            </pattern>
+            <pattern name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#3">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="directoryId" value="${stormpath.directoryId}"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/stormpath/create-account"/>
+                    <property name="config-ref" value="Stormpath"/>
                     <property name="auxiliary;index" value="20"/>
                 </properties>
             </pattern>
-            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#3">
+            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="sourceClass"/>
@@ -201,42 +198,21 @@
                     <property name="auxiliary;index" value="21"/>
                 </properties>
             </pattern>
-            <pattern name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#3">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="directoryId" value="${stormpath.directoryId}"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/stormpath/create-account"/>
-                    <property name="config-ref" value="Stormpath"/>
-                    <property name="auxiliary;index" value="22"/>
-                </properties>
-            </pattern>
-            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#4">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="sourceClass"/>
-                    <property name="returnClass"/>
-                    <property name="ignoreBadInput"/>
-                    <property name="encoding"/>
-                    <property name="mapper-ref"/>
-                    <property name="mimeType"/>
-                    <property name="auxiliary;index" value="23"/>
-                </properties>
-            </pattern>
             <pattern name="Extract Cause Message Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/exception-strategy" entity-id="Reference Exception Strategy#2">
                 <properties>
                     <property name="ref" value="extractCauseMessageExceptionStrategy"/>
-                    <property name="auxiliary;index" value="24"/>
+                    <property name="auxiliary;index" value="22"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="resetPassword" entity-id="ebc60474-56ab-4a81-8a49-3aefc8af183b">
+    <flow SubFlow="false" name="resetPassword" entity-id="8559cc2e-c23a-471a-a3ee-1d799db55fae">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="25"/>
+            <property name="auxiliary;index" value="23"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#4">
             <graphicalData x="0" y="0" width="0" height="0"/>
@@ -265,7 +241,7 @@
                     <property name="user"/>
                     <property name="responseTimeout"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="26"/>
+                    <property name="auxiliary;index" value="24"/>
                     <property name="connector-ref"/>
                 </properties>
             </endpoint>
@@ -276,26 +252,14 @@
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="27"/>
+                    <property name="auxiliary;index" value="25"/>
                 </properties>
             </pattern>
             <pattern name="Set Payload" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#3">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="value" value="#[new Email().withEmail(message.payload.email)]"/>
-                    <property name="auxiliary;index" value="28"/>
-                </properties>
-            </pattern>
-            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#5">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="sourceClass"/>
-                    <property name="returnClass"/>
-                    <property name="ignoreBadInput"/>
-                    <property name="encoding"/>
-                    <property name="mapper-ref"/>
-                    <property name="mimeType"/>
-                    <property name="auxiliary;index" value="29"/>
+                    <property name="auxiliary;index" value="26"/>
                 </properties>
             </pattern>
             <pattern name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#4">
@@ -304,10 +268,10 @@
                     <property name="applicationId" value="${stormpath.applicationId}"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/stormpath/create-password-reset-token"/>
                     <property name="config-ref" value="Stormpath"/>
-                    <property name="auxiliary;index" value="30"/>
+                    <property name="auxiliary;index" value="27"/>
                 </properties>
             </pattern>
-            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#6">
+            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#3">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="sourceClass"/>
@@ -316,24 +280,24 @@
                     <property name="encoding"/>
                     <property name="mapper-ref"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="31"/>
+                    <property name="auxiliary;index" value="28"/>
                 </properties>
             </pattern>
             <pattern name="Extract Cause Message Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/exception-strategy" entity-id="Reference Exception Strategy#3">
                 <properties>
                     <property name="ref" value="extractCauseMessageExceptionStrategy"/>
-                    <property name="auxiliary;index" value="32"/>
+                    <property name="auxiliary;index" value="29"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="homePage" entity-id="5def4920-a0a8-4d61-bc24-e3bb60365c11">
+    <flow SubFlow="false" name="homePage" entity-id="ceb4a1a9-da2d-4166-81a3-c778f0ce0193">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="33"/>
+            <property name="auxiliary;index" value="30"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#5">
             <graphicalData x="0" y="0" width="0" height="0"/>
@@ -362,11 +326,11 @@
                     <property name="user"/>
                     <property name="responseTimeout"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="34"/>
+                    <property name="auxiliary;index" value="31"/>
                     <property name="connector-ref"/>
                 </properties>
             </endpoint>
-            <unknown description="false" index="35" entity-id="unknown#1">
+            <unknown description="false" index="32" entity-id="unknown#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <content>&lt;http:static-resource-handler xmlns:http=&quot;http://www.mulesoft.org/schema/mule/http&quot; resourceBase=&quot;${app.home}/docroot&quot; defaultFile=&quot;index.html&quot; xmlns:doc=&quot;http://www.mulesoft.org/schema/mule/documentation&quot; doc:name=&quot;HTTP Static Resource Handler&quot;/&gt;</content>
             </unknown>
