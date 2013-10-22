@@ -26,9 +26,10 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
     <catch-exception-strategy name="extractCauseMessageExceptionStrategy"
         doc:name="Catch Exception Strategy">
         <set-payload value="#[exception.cause.message]" doc:name="Set Payload" />
+        <json:object-to-json-transformer doc:name="Object to JSON" />
     </catch-exception-strategy>
 
-    <flow name="attemptLogin" doc:name="attemptLogin">
+    <flow name="attemptLogin" doc:name="Attempt Login">
         <http:inbound-endpoint exchange-pattern="request-response"
             host="${http.host}" port="${http.port}" path="demo/api/attempt-login"
             doc:name="HTTP" />
@@ -42,13 +43,14 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
 
         <stormpath:attempt-login config-ref="Stormpath"
             applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
+
         <json:object-to-json-transformer doc:name="Object to JSON" />
 
         <exception-strategy ref="extractCauseMessageExceptionStrategy"
             doc:name="Extract Cause Message Exception Strategy" />
     </flow>
 
-    <flow name="createAccount" doc:name="createAccount">
+    <flow name="createAccount" doc:name="Create Account">
         <http:inbound-endpoint exchange-pattern="request-response"
             host="${http.host}" port="${http.port}" path="demo/api/create-account"
             doc:name="HTTP" />
@@ -68,13 +70,31 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
 
         <stormpath:create-account config-ref="Stormpath"
             directoryId="${stormpath.directoryId}" doc:name="Stormpath" />
+
+        <async>
+            <all>
+                <flow-ref name="provisionBugTrackingAccount" doc:name="Provision Bug Tracking Account" />
+                <flow-ref name="provisionCRMAccount" doc:name="Provision CRM Account" />
+            </all>
+        </async>
+
         <json:object-to-json-transformer doc:name="Object to JSON" />
 
         <exception-strategy ref="extractCauseMessageExceptionStrategy"
             doc:name="Extract Cause Message Exception Strategy" />
     </flow>
 
-    <flow name="resetPassword" doc:name="resetPassword">
+    <flow name="provisionBugTrackingAccount" doc:name="Provision Bug Tracking Account">
+        <logger level="INFO"
+            message="Provisionning Bug Tracking Account for: #[message.payload.email]" />
+    </flow>
+
+    <flow name="provisionCRMAccount" doc:name="Provision CRM Account">
+        <logger level="INFO"
+            message="Provisionning CRM Account for: #[message.payload.email]" />
+    </flow>
+
+    <flow name="resetPassword" doc:name="Reset Password">
         <http:inbound-endpoint exchange-pattern="request-response"
             host="${http.host}" port="${http.port}" path="demo/api/reset-password"
             doc:name="HTTP" />
@@ -87,6 +107,7 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
 
         <stormpath:create-password-reset-token
             config-ref="Stormpath" applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
+
         <json:object-to-json-transformer doc:name="Object to JSON" />
 
         <exception-strategy ref="extractCauseMessageExceptionStrategy"
