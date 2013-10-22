@@ -6,3 +6,7 @@
 - Start the Mule application
 
 The demo is ready: browsing to http://localhost:8081/demo/ should display it.
+
+### OVerview
+
+![](flows/stormpath-demo.png)
