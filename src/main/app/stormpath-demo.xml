@@ -23,6 +23,11 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
     <stormpath:config name="Stormpath" apiKeyId="${stormpath.apiKeyId}"
         apiKeySecret="${stormpath.apiKeySecret}" doc:name="Stormpath" />
 
+    <catch-exception-strategy name="extractCauseMessageExceptionStrategy"
+        doc:name="Catch Exception Strategy">
+        <set-payload value="#[exception.cause.message]" doc:name="Set Payload" />
+    </catch-exception-strategy>
+
     <flow name="attemptLogin" doc:name="attemptLogin">
         <http:inbound-endpoint exchange-pattern="request-response"
             host="${http.host}" port="${http.port}" path="demo/api/attempt-login"
@@ -40,9 +45,8 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
             applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
         <json:object-to-json-transformer doc:name="Object to JSON" />
 
-        <catch-exception-strategy doc:name="Catch Exception Strategy">
-            <set-payload value="#[exception.cause.message]" doc:name="Set Payload" />
-        </catch-exception-strategy>
+        <exception-strategy ref="extractCauseMessageExceptionStrategy"
+            doc:name="Extract Cause Message Exception Strategy" />
     </flow>
 
     <flow name="createAccount" doc:name="createAccount">
@@ -68,9 +72,8 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
             directoryId="${stormpath.directoryId}" doc:name="Stormpath" />
         <json:object-to-json-transformer doc:name="Object to JSON" />
 
-        <catch-exception-strategy doc:name="Catch_Exception_Strategy">
-            <set-payload value="#[exception.cause.message]" doc:name="Set Payload" />
-        </catch-exception-strategy>
+        <exception-strategy ref="extractCauseMessageExceptionStrategy"
+            doc:name="Extract Cause Message Exception Strategy" />
     </flow>
 
     <flow name="resetPassword" doc:name="resetPassword">
@@ -89,9 +92,8 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
             config-ref="Stormpath" applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
         <json:object-to-json-transformer doc:name="Object to JSON" />
 
-        <catch-exception-strategy doc:name="Catch_Exception_Strategy">
-            <set-payload value="#[exception.cause.message]" doc:name="Set Payload" />
-        </catch-exception-strategy>
+        <exception-strategy ref="extractCauseMessageExceptionStrategy"
+            doc:name="Extract Cause Message Exception Strategy" />
     </flow>
 
     <flow name="homePage" doc:name="homePage">
