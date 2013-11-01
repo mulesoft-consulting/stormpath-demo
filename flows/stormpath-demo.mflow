@@ -46,7 +46,7 @@
             </lane>
         </compartment>
     </global-element>
-    <flow SubFlow="false" name="attemptLogin" entity-id="ac649537-349a-4011-aa1e-6d67cdff1d92">
+    <flow SubFlow="false" name="attemptLogin" entity-id="a12fa3e9-7408-41f5-ae9e-522267c589ca">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -102,7 +102,7 @@
                     <property name="auxiliary;index" value="13"/>
                 </properties>
             </pattern>
-            <pattern name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#2">
+            <pattern name="Attempt Login" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="applicationId" value="${stormpath.applicationId}"/>
@@ -131,7 +131,7 @@
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="createAccount" entity-id="a42c59be-ad2d-426d-81f5-32ab6bc7cb1a">
+    <flow SubFlow="false" name="createAccount" entity-id="286088c3-ceaa-4cc9-8d8f-3490c7d6f1a5">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -189,7 +189,7 @@
                     <property name="auxiliary;index" value="20"/>
                 </properties>
             </pattern>
-            <pattern name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#3">
+            <pattern name="Create Account" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#3">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="directoryId" value="${stormpath.directoryId}"/>
@@ -215,7 +215,7 @@
                             </properties>
                             <pattern name="All" type="org.mule.tooling.ui.modules.core.pattern.all" entity-id="All#2"/>
                             <compartment entity-id="compartment#2">
-<lane hadOnlyOneElement="true" index="0" isChoiceOtherwiseLane="false" entity-id="c360a7a8-ebe5-43a2-a70e-ed8dad35ba7f">
+<lane hadOnlyOneElement="true" index="0" isChoiceOtherwiseLane="false" entity-id="76b96057-c544-4ee8-85ee-92d07c2f76af">
     <pattern name="Provision Bug Tracking Account" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#1">
         <graphicalData x="0" y="0" width="0" height="0"/>
         <properties>
@@ -224,7 +224,7 @@
         </properties>
     </pattern>
 </lane>
-<lane hadOnlyOneElement="true" index="0" isChoiceOtherwiseLane="false" entity-id="a05262eb-5b58-4248-a8c3-9b47e39b64ea">
+<lane hadOnlyOneElement="true" index="0" isChoiceOtherwiseLane="false" entity-id="c8d17d20-b120-4fc7-acd7-30a045dfe9ff">
     <pattern name="Provision CRM Account" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#2">
         <graphicalData x="0" y="0" width="0" height="0"/>
         <properties>
@@ -258,7 +258,7 @@
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="provisionBugTrackingAccount" entity-id="3aaa8d5b-da2b-4974-a860-7883ac3a3eaf">
+    <flow SubFlow="false" name="provisionBugTrackingAccount" entity-id="9cfea6e9-2ba9-4e2c-9ab5-157bbd4a6ffd">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -279,7 +279,7 @@
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="provisionCRMAccount" entity-id="cb9e5230-0213-4b01-843d-15dff4ef6040">
+    <flow SubFlow="false" name="provisionCRMAccount" entity-id="05e260cd-d017-4782-92f6-ec15f67bc0a5">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -300,7 +300,7 @@
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="resetPassword" entity-id="e7fa7894-e09c-4238-9712-9ea08771f6b0">
+    <flow SubFlow="false" name="resetPassword" entity-id="88400588-198a-492b-ab94-989ebe26ab85">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -356,7 +356,7 @@
                     <property name="auxiliary;index" value="35"/>
                 </properties>
             </pattern>
-            <pattern name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#4">
+            <pattern name="Create Password Reset Token" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#4">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="applicationId" value="${stormpath.applicationId}"/>
@@ -385,7 +385,7 @@
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="homePage" entity-id="c627ed20-4a2b-4242-ac56-8e50ccc00b0d">
+    <flow SubFlow="false" name="homePage" entity-id="6cf88da1-3f3c-4abc-8ce4-623b27a4752b">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>

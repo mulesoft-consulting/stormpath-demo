@@ -42,7 +42,7 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
             doc:name="Set Payload" />
 
         <stormpath:attempt-login config-ref="Stormpath"
-            applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
+            applicationId="${stormpath.applicationId}" doc:name="Attempt Login" />
 
         <json:object-to-json-transformer doc:name="Object to JSON" />
 
@@ -69,7 +69,7 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
         ]]></expression-component>
 
         <stormpath:create-account config-ref="Stormpath"
-            directoryId="${stormpath.directoryId}" doc:name="Stormpath" />
+            directoryId="${stormpath.directoryId}" doc:name="Create Account" />
 
         <async>
             <all>
@@ -90,8 +90,7 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
     </flow>
 
     <flow name="provisionCRMAccount" doc:name="Provision CRM Account">
-        <logger level="INFO"
-            message="Provisionning CRM Account for: #[message.payload.email]" />
+        <logger level="INFO" message="Provisionning CRM Account for: #[message.payload.email]" />
     </flow>
 
     <flow name="resetPassword" doc:name="Reset Password">
@@ -106,7 +105,7 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
             doc:name="Set Payload" />
 
         <stormpath:create-password-reset-token
-            config-ref="Stormpath" applicationId="${stormpath.applicationId}" doc:name="Stormpath" />
+            config-ref="Stormpath" applicationId="${stormpath.applicationId}" doc:name="Create Password Reset Token" />
 
         <json:object-to-json-transformer doc:name="Object to JSON" />
 
