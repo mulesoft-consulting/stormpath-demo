@@ -6,21 +6,51 @@
             <property name="auxiliary;index" value="1"/>
         </properties>
     </global-element>
-    <global-element name="Stormpath" type="http://www.mulesoft.org/schema/mule/stormpath/config" entity-id="Stormpath#1">
+    <global-element name="HTTP\HTTPS" type="org.mule.tooling.ui.modules.core.global.httpsConnector" entity-id="HTTP\HTTPS#1">
         <properties>
-            <property name="apiKeySecret" value="${stormpath.apiKeySecret}"/>
-            <property name="apiKeyId" value="${stormpath.apiKeyId}"/>
-            <property name="name" value="Stormpath"/>
+            <property name="proxyUsername"/>
+            <property name="reuseAddress"/>
+            <property name="receiveBacklog"/>
+            <property name="enableCookies"/>
+            <property name="serverSoTimeout"/>
+            <property name="socketSoLinger"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/https/connector"/>
+            <property name="clientSoTimeout"/>
+            <property name="validateConnections"/>
+            <property name="keepAlive"/>
+            <property name="sendTcpNoDelay"/>
+            <property name="label"/>
+            <property name="proxyPort"/>
+            <property name="cookieSpec"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="proxyHostname"/>
+            <property name="receiveBufferSize"/>
+            <property name="name" value="httpsConnector"/>
+            <property name="keepSendSocketOpen"/>
+            <property name="dynamicNotification"/>
+            <property name="sendBufferSize"/>
+            <property name="ENABLE_MODE_SWITCH"/>
             <property name="auxiliary;index" value="6"/>
+            <property name="proxyPassword"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/https/tls-key-store;0">
+                <property name="path" value="keystore.jks"/>
+                <property name="storePassword" value="${keystore.password}"/>
+                <property name="keyPassword" value="${keystore.password}"/>
+                <property name="auxiliary;index" value="8"/>
+                <property name="auxiliary;wrapIn" value="8"/>
+            </property-collection>
         </properties>
     </global-element>
+    <global-unknown description="false" unknownName="Stormpath" index="9" entity-id="global-unknown#1">
+        <content>&lt;stormpath:config xmlns:stormpath=&quot;http://www.mulesoft.org/schema/mule/stormpath&quot; name=&quot;Stormpath&quot; apiKeyId=&quot;${stormpath.apiKeyId}&quot; apiKeySecret=&quot;${stormpath.apiKeySecret}&quot; xmlns:doc=&quot;http://www.mulesoft.org/schema/mule/documentation&quot; doc:name=&quot;Stormpath&quot;/&gt;</content>
+    </global-unknown>
     <global-element name="Catch Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/catch-exception-strategy" entity-id="Catch Exception Strategy#1">
         <properties>
             <property name=""/>
             <property name="when"/>
             <property name="name" value="extractCauseMessageExceptionStrategy"/>
             <property name="enableNotifications"/>
-            <property name="auxiliary;index" value="7"/>
+            <property name="auxiliary;index" value="10"/>
         </properties>
         <compartment>
             <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
@@ -28,7 +58,7 @@
                     <graphicalData x="0" y="0" width="0" height="0"/>
                     <properties>
                         <property name="value" value="#[exception.cause.message]"/>
-                        <property name="auxiliary;index" value="8"/>
+                        <property name="auxiliary;index" value="11"/>
                     </properties>
                 </pattern>
                 <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#1">
@@ -39,50 +69,52 @@
                         <property name="ignoreBadInput"/>
                         <property name="encoding"/>
                         <property name="mapper-ref"/>
+                        <property name="auxiliary;index" value="12"/>
                         <property name="mimeType"/>
-                        <property name="auxiliary;index" value="9"/>
                     </properties>
                 </pattern>
             </lane>
         </compartment>
     </global-element>
-    <flow SubFlow="false" name="attemptLogin" entity-id="a12fa3e9-7408-41f5-ae9e-522267c589ca">
+    <flow SubFlow="false" name="attemptLogin" entity-id="f9412415-8e59-4b6b-9ee7-6f9c30648f56">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
+            <property name="initialState"/>
             <property name="bussinessEventsLabel"/>
+            <property name="auxiliary;index" value="13"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="10"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
             <graphicalData x="0" y="0" width="0" height="0"/>
-            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#1">
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTPS" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
-                    <property name="port" value="${http.port}"/>
-                    <property name="host" value="${http.host}"/>
+                    <property name="port" value="${https.port}"/>
+                    <property name="contentType"/>
+                    <property name="password"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="encoding"/>
+                    <property name="path" value="demo/api/attempt-login"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="auxiliary;index" value="14"/>
+                    <property name="connector-ref-outbound" value="httpsConnector"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="host" value="${https.host}"/>
                     <property name="businessEventsLabel"/>
                     <property name="followRedirects"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/http/endpoint"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/https/endpoint"/>
                     <property name="keep-alive"/>
-                    <property name="contentType"/>
                     <property name="disableTransportTransformer"/>
-                    <property name="password"/>
-                    <property name="exchange-pattern" value="request-response"/>
-                    <property name="tracking:enable-default-events"/>
                     <property name="ref"/>
-                    <property name="transformer-refs"/>
                     <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
                     <property name="address"/>
-                    <property name="path" value="demo/api/attempt-login"/>
-                    <property name="encoding"/>
-                    <property name="responseTransformer-refs"/>
                     <property name="method"/>
                     <property name="user"/>
-                    <property name="responseTimeout"/>
-                    <property name="mimeType"/>
-                    <property name="auxiliary;index" value="11"/>
-                    <property name="connector-ref"/>
+                    <property name="connector-ref" value="httpsConnector"/>
                 </properties>
             </endpoint>
             <pattern name="Body to Parameter Map" type="http://www.mulesoft.org/schema/mule/http/body-to-parameter-map-transformer" entity-id="Body to Parameter Map#1">
@@ -91,26 +123,21 @@
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
+                    <property name="auxiliary;index" value="15"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="12"/>
                 </properties>
             </pattern>
             <pattern name="Set Payload" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="value" value="#[StormpathUtils.createBasicLoginAttempt(message.payload.username, message.payload.password)]"/>
-                    <property name="auxiliary;index" value="13"/>
+                    <property name="auxiliary;index" value="16"/>
                 </properties>
             </pattern>
-            <pattern name="Attempt Login" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#2">
+            <unknown description="false" index="17" entity-id="unknown#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="applicationId" value="${stormpath.applicationId}"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/stormpath/attempt-login"/>
-                    <property name="config-ref" value="Stormpath"/>
-                    <property name="auxiliary;index" value="14"/>
-                </properties>
-            </pattern>
+                <content>&lt;stormpath:attempt-login xmlns:stormpath=&quot;http://www.mulesoft.org/schema/mule/stormpath&quot; config-ref=&quot;Stormpath&quot; applicationId=&quot;${stormpath.applicationId}&quot; xmlns:doc=&quot;http://www.mulesoft.org/schema/mule/documentation&quot; doc:name=&quot;Attempt Login&quot;/&gt;</content>
+            </unknown>
             <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
@@ -119,55 +146,57 @@
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
                     <property name="mapper-ref"/>
+                    <property name="auxiliary;index" value="18"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="15"/>
                 </properties>
             </pattern>
             <pattern name="Extract Cause Message Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/exception-strategy" entity-id="Reference Exception Strategy#1">
                 <properties>
                     <property name="ref" value="extractCauseMessageExceptionStrategy"/>
-                    <property name="auxiliary;index" value="16"/>
+                    <property name="auxiliary;index" value="19"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="createAccount" entity-id="286088c3-ceaa-4cc9-8d8f-3490c7d6f1a5">
+    <flow SubFlow="false" name="createAccount" entity-id="df554bae-9c31-400d-bce6-a250dde27830">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
+            <property name="initialState"/>
             <property name="bussinessEventsLabel"/>
+            <property name="auxiliary;index" value="20"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="17"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
             <graphicalData x="0" y="0" width="0" height="0"/>
-            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#2">
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTPS" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
-                    <property name="port" value="${http.port}"/>
-                    <property name="host" value="${http.host}"/>
+                    <property name="port" value="${https.port}"/>
+                    <property name="contentType"/>
+                    <property name="password"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="encoding"/>
+                    <property name="path" value="demo/api/create-account"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="auxiliary;index" value="21"/>
+                    <property name="connector-ref-outbound" value="httpsConnector"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="host" value="${https.host}"/>
                     <property name="businessEventsLabel"/>
                     <property name="followRedirects"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/http/endpoint"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/https/endpoint"/>
                     <property name="keep-alive"/>
-                    <property name="contentType"/>
                     <property name="disableTransportTransformer"/>
-                    <property name="password"/>
-                    <property name="exchange-pattern" value="request-response"/>
-                    <property name="tracking:enable-default-events"/>
                     <property name="ref"/>
-                    <property name="transformer-refs"/>
                     <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
                     <property name="address"/>
-                    <property name="path" value="demo/api/create-account"/>
-                    <property name="encoding"/>
-                    <property name="responseTransformer-refs"/>
                     <property name="method"/>
                     <property name="user"/>
-                    <property name="responseTimeout"/>
-                    <property name="mimeType"/>
-                    <property name="auxiliary;index" value="18"/>
-                    <property name="connector-ref"/>
+                    <property name="connector-ref" value="httpsConnector"/>
                 </properties>
             </endpoint>
             <pattern name="Body to Parameter Map" type="http://www.mulesoft.org/schema/mule/http/body-to-parameter-map-transformer" entity-id="Body to Parameter Map#2">
@@ -176,8 +205,8 @@
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
+                    <property name="auxiliary;index" value="22"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="19"/>
                 </properties>
             </pattern>
             <pattern name="Expression" type="http://www.mulesoft.org/schema/mule/core/expression-component" entity-id="Expression#1">
@@ -186,50 +215,45 @@
                     <property name="expression" value="&#xA;          message.payload =&#xA;            new Account()&#xA;               .withUsername(message.payload.username)&#xA;               .withEmail(message.payload.email)&#xA;               .withPassword(message.payload.password)&#xA;               .withGivenName(message.payload.givenName)&#xA;               .withSurname(message.payload.surname);&#xA;        "/>
                     <property name="file"/>
                     <property name="evaluator"/>
-                    <property name="auxiliary;index" value="20"/>
+                    <property name="auxiliary;index" value="23"/>
                 </properties>
             </pattern>
-            <pattern name="Create Account" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#3">
+            <unknown description="false" index="24" entity-id="unknown#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="directoryId" value="${stormpath.directoryId}"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/stormpath/create-account"/>
-                    <property name="config-ref" value="Stormpath"/>
-                    <property name="auxiliary;index" value="21"/>
-                </properties>
-            </pattern>
+                <content>&lt;stormpath:create-account xmlns:stormpath=&quot;http://www.mulesoft.org/schema/mule/stormpath&quot; config-ref=&quot;Stormpath&quot; directoryId=&quot;${stormpath.directoryId}&quot; xmlns:doc=&quot;http://www.mulesoft.org/schema/mule/documentation&quot; doc:name=&quot;Create Account&quot;/&gt;</content>
+            </unknown>
             <scope name="Async" type="http://www.mulesoft.org/schema/mule/core/async" entity-id="Async#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="processingStrategy"/>
-                    <property name="auxiliary;index" value="22"/>
+                    <property name="auxiliary;index" value="25"/>
                 </properties>
                 <compartment entity-id="compartment#1">
                     <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#4">
-                        <splitter index="23" name="All" type="org.mule.tooling.ui.modules.core.pattern.all" entity-id="All#1">
+                        <splitter index="26" name="All" type="org.mule.tooling.ui.modules.core.pattern.all" entity-id="All#1">
                             <graphicalData x="0" y="0" width="0" height="0"/>
                             <properties>
 <property name="bussinessEventsLabel"/>
-<property name="auxiliary;index" value="23"/>
+<property name="auxiliary;index" value="26"/>
 <property name="tracking:enable-default-events"/>
                             </properties>
                             <pattern name="All" type="org.mule.tooling.ui.modules.core.pattern.all" entity-id="All#2"/>
                             <compartment entity-id="compartment#2">
-<lane hadOnlyOneElement="true" index="0" isChoiceOtherwiseLane="false" entity-id="76b96057-c544-4ee8-85ee-92d07c2f76af">
+<lane hadOnlyOneElement="true" index="0" isChoiceOtherwiseLane="false" entity-id="caf5ea16-b3d5-426e-af25-d5fe699fb19d">
     <pattern name="Provision Bug Tracking Account" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#1">
         <graphicalData x="0" y="0" width="0" height="0"/>
         <properties>
             <property name="name" value="provisionBugTrackingAccount"/>
-            <property name="auxiliary;index" value="24"/>
+            <property name="auxiliary;index" value="27"/>
         </properties>
     </pattern>
 </lane>
-<lane hadOnlyOneElement="true" index="0" isChoiceOtherwiseLane="false" entity-id="c8d17d20-b120-4fc7-acd7-30a045dfe9ff">
+<lane hadOnlyOneElement="true" index="0" isChoiceOtherwiseLane="false" entity-id="a4f9896f-a51d-47e8-b9f2-cdc18b4efd78">
     <pattern name="Provision CRM Account" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#2">
         <graphicalData x="0" y="0" width="0" height="0"/>
         <properties>
             <property name="name" value="provisionCRMAccount"/>
-            <property name="auxiliary;index" value="25"/>
+            <property name="auxiliary;index" value="28"/>
         </properties>
     </pattern>
 </lane>
@@ -246,25 +270,26 @@
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
                     <property name="mapper-ref"/>
+                    <property name="auxiliary;index" value="29"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="26"/>
                 </properties>
             </pattern>
             <pattern name="Extract Cause Message Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/exception-strategy" entity-id="Reference Exception Strategy#2">
                 <properties>
                     <property name="ref" value="extractCauseMessageExceptionStrategy"/>
-                    <property name="auxiliary;index" value="27"/>
+                    <property name="auxiliary;index" value="30"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="provisionBugTrackingAccount" entity-id="9cfea6e9-2ba9-4e2c-9ab5-157bbd4a6ffd">
+    <flow SubFlow="false" name="provisionBugTrackingAccount" entity-id="4b17fe59-8977-499f-afd5-8c7b1fc22a9f">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
+            <property name="initialState"/>
             <property name="bussinessEventsLabel"/>
+            <property name="auxiliary;index" value="31"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="28"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#5">
             <graphicalData x="0" y="0" width="0" height="0"/>
@@ -274,18 +299,19 @@
                     <property name="message" value="Provisionning Bug Tracking Account for: #[message.payload.email]"/>
                     <property name="category"/>
                     <property name="level" value="INFO"/>
-                    <property name="auxiliary;index" value="29"/>
+                    <property name="auxiliary;index" value="32"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="provisionCRMAccount" entity-id="05e260cd-d017-4782-92f6-ec15f67bc0a5">
+    <flow SubFlow="false" name="provisionCRMAccount" entity-id="228ad775-b2b2-40fd-a9a7-cdedc0e8542a">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
+            <property name="initialState"/>
             <property name="bussinessEventsLabel"/>
+            <property name="auxiliary;index" value="33"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="30"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#6">
             <graphicalData x="0" y="0" width="0" height="0"/>
@@ -295,48 +321,50 @@
                     <property name="message" value="Provisionning CRM Account for: #[message.payload.email]"/>
                     <property name="category"/>
                     <property name="level" value="INFO"/>
-                    <property name="auxiliary;index" value="31"/>
+                    <property name="auxiliary;index" value="34"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="resetPassword" entity-id="88400588-198a-492b-ab94-989ebe26ab85">
+    <flow SubFlow="false" name="resetPassword" entity-id="e4bd125a-6aa7-4f3b-be1d-fdb6dc148f04">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
+            <property name="initialState"/>
             <property name="bussinessEventsLabel"/>
+            <property name="auxiliary;index" value="35"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="32"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#7">
             <graphicalData x="0" y="0" width="0" height="0"/>
-            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#3">
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTPS" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#3">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
-                    <property name="port" value="${http.port}"/>
-                    <property name="host" value="${http.host}"/>
+                    <property name="port" value="${https.port}"/>
+                    <property name="contentType"/>
+                    <property name="password"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="encoding"/>
+                    <property name="path" value="demo/api/reset-password"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="auxiliary;index" value="36"/>
+                    <property name="connector-ref-outbound" value="httpsConnector"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="host" value="${https.host}"/>
                     <property name="businessEventsLabel"/>
                     <property name="followRedirects"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/http/endpoint"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/https/endpoint"/>
                     <property name="keep-alive"/>
-                    <property name="contentType"/>
                     <property name="disableTransportTransformer"/>
-                    <property name="password"/>
-                    <property name="exchange-pattern" value="request-response"/>
-                    <property name="tracking:enable-default-events"/>
                     <property name="ref"/>
-                    <property name="transformer-refs"/>
                     <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
                     <property name="address"/>
-                    <property name="path" value="demo/api/reset-password"/>
-                    <property name="encoding"/>
-                    <property name="responseTransformer-refs"/>
                     <property name="method"/>
                     <property name="user"/>
-                    <property name="responseTimeout"/>
-                    <property name="mimeType"/>
-                    <property name="auxiliary;index" value="33"/>
-                    <property name="connector-ref"/>
+                    <property name="connector-ref" value="httpsConnector"/>
                 </properties>
             </endpoint>
             <pattern name="Body to Parameter Map" type="http://www.mulesoft.org/schema/mule/http/body-to-parameter-map-transformer" entity-id="Body to Parameter Map#3">
@@ -345,26 +373,21 @@
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
+                    <property name="auxiliary;index" value="37"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="34"/>
                 </properties>
             </pattern>
             <pattern name="Set Payload" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#3">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="value" value="#[new Email().withEmail(message.payload.email)]"/>
-                    <property name="auxiliary;index" value="35"/>
+                    <property name="auxiliary;index" value="38"/>
                 </properties>
             </pattern>
-            <pattern name="Create Password Reset Token" type="http://www.mulesoft.org/schema/mule/stormpath/stormpath-connector" entity-id="Stormpath#4">
+            <unknown description="false" index="39" entity-id="unknown#3">
                 <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="applicationId" value="${stormpath.applicationId}"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/stormpath/create-password-reset-token"/>
-                    <property name="config-ref" value="Stormpath"/>
-                    <property name="auxiliary;index" value="36"/>
-                </properties>
-            </pattern>
+                <content>&lt;stormpath:create-password-reset-token xmlns:stormpath=&quot;http://www.mulesoft.org/schema/mule/stormpath&quot; config-ref=&quot;Stormpath&quot; applicationId=&quot;${stormpath.applicationId}&quot; xmlns:doc=&quot;http://www.mulesoft.org/schema/mule/documentation&quot; doc:name=&quot;Create Password Reset Token&quot;/&gt;</content>
+            </unknown>
             <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="Object to JSON#4">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
@@ -373,61 +396,67 @@
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
                     <property name="mapper-ref"/>
+                    <property name="auxiliary;index" value="40"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="37"/>
                 </properties>
             </pattern>
             <pattern name="Extract Cause Message Exception Strategy" type="http://www.mulesoft.org/schema/mule/core/exception-strategy" entity-id="Reference Exception Strategy#3">
                 <properties>
                     <property name="ref" value="extractCauseMessageExceptionStrategy"/>
-                    <property name="auxiliary;index" value="38"/>
+                    <property name="auxiliary;index" value="41"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="homePage" entity-id="6cf88da1-3f3c-4abc-8ce4-623b27a4752b">
+    <flow SubFlow="false" name="homePage" entity-id="dfe3e533-674b-49ca-a5fd-ef965733c407">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
+            <property name="initialState"/>
             <property name="bussinessEventsLabel"/>
+            <property name="auxiliary;index" value="42"/>
             <property name="tracking:enable-default-events"/>
-            <property name="auxiliary;index" value="39"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#8">
             <graphicalData x="0" y="0" width="0" height="0"/>
-            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#4">
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTPS" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#4">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
-                    <property name="port" value="${http.port}"/>
-                    <property name="host" value="${http.host}"/>
+                    <property name="port" value="${https.port}"/>
+                    <property name="contentType"/>
+                    <property name="password"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="encoding"/>
+                    <property name="path" value="demo"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="auxiliary;index" value="43"/>
+                    <property name="connector-ref-outbound" value="httpsConnector"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="host" value="${https.host}"/>
                     <property name="businessEventsLabel"/>
                     <property name="followRedirects"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/http/endpoint"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/https/endpoint"/>
                     <property name="keep-alive"/>
-                    <property name="contentType"/>
                     <property name="disableTransportTransformer"/>
-                    <property name="password"/>
-                    <property name="exchange-pattern" value="request-response"/>
-                    <property name="tracking:enable-default-events"/>
                     <property name="ref"/>
-                    <property name="transformer-refs"/>
                     <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
                     <property name="address"/>
-                    <property name="path" value="demo"/>
-                    <property name="encoding"/>
-                    <property name="responseTransformer-refs"/>
                     <property name="method"/>
                     <property name="user"/>
-                    <property name="responseTimeout"/>
-                    <property name="mimeType"/>
-                    <property name="auxiliary;index" value="40"/>
-                    <property name="connector-ref"/>
+                    <property name="connector-ref" value="httpsConnector"/>
                 </properties>
             </endpoint>
-            <unknown description="false" index="41" entity-id="unknown#1">
+            <pattern name="HTTP Static Resource Handler" type="http://www.mulesoft.org/schema/mule/http/static-resource-handler" entity-id="HTTP Static Resource Handler#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
-                <content>&lt;http:static-resource-handler xmlns:http=&quot;http://www.mulesoft.org/schema/mule/http&quot; resourceBase=&quot;${app.home}/docroot&quot; defaultFile=&quot;index.html&quot; xmlns:doc=&quot;http://www.mulesoft.org/schema/mule/documentation&quot; doc:name=&quot;HTTP Static Resource Handler&quot;/&gt;</content>
-            </unknown>
+                <properties>
+                    <property name="defaultFile" value="index.html"/>
+                    <property name="resourceBase" value="${app.home}/docroot"/>
+                    <property name="auxiliary;index" value="44"/>
+                </properties>
+            </pattern>
         </lane>
     </flow>
 </mule-configuration>

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ajax="http://www.mulesoft.org/schema/mule/ajax" xmlns:json="http://www.mulesoft.org/schema/mule/json"
-    xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:stormpath="http://www.mulesoft.org/schema/mule/stormpath"
+<mule xmlns:https="http://www.mulesoft.org/schema/mule/https" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+    xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:stormpath="http://www.mulesoft.org/schema/mule/stormpath"
     xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
     xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ajax http://www.mulesoft.org/schema/mule/ajax/current/mule-ajax.xsd
-http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+    xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mule/stormpath/current/mule-stormpath.xsd">
 
     <configuration doc:name="Configuration">
@@ -19,6 +20,12 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
             <import class="org.mule.modules.stormpath.model.Email" />
         </expression-language>
     </configuration>
+
+    <https:connector name="httpsConnector" doc:name="HTTPS">
+        <service-overrides sessionHandler="org.mule.session.NullSessionHandler" />
+        <https:tls-key-store path="keystore.jks" keyPassword="${keystore.password}"
+            storePassword="${keystore.password}" />
+    </https:connector>
 
     <stormpath:config name="Stormpath" apiKeyId="${stormpath.apiKeyId}"
         apiKeySecret="${stormpath.apiKeySecret}" doc:name="Stormpath" />
@@ -30,9 +37,9 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
     </catch-exception-strategy>
 
     <flow name="attemptLogin" doc:name="Attempt Login">
-        <http:inbound-endpoint exchange-pattern="request-response"
-            host="${http.host}" port="${http.port}" path="demo/api/attempt-login"
-            doc:name="HTTP" />
+        <https:inbound-endpoint exchange-pattern="request-response"
+            connector-ref="httpsConnector" host="${https.host}" port="${https.port}"
+            path="demo/api/attempt-login" doc:name="HTTPS" />
 
         <http:body-to-parameter-map-transformer
             doc:name="Body to Parameter Map" />
@@ -51,9 +58,9 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
     </flow>
 
     <flow name="createAccount" doc:name="Create Account">
-        <http:inbound-endpoint exchange-pattern="request-response"
-            host="${http.host}" port="${http.port}" path="demo/api/create-account"
-            doc:name="HTTP" />
+        <https:inbound-endpoint exchange-pattern="request-response"
+            connector-ref="httpsConnector" host="${https.host}" port="${https.port}"
+            path="demo/api/create-account" doc:name="HTTPS" />
 
         <http:body-to-parameter-map-transformer
             doc:name="Body to Parameter Map" />
@@ -94,9 +101,9 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
     </flow>
 
     <flow name="resetPassword" doc:name="Reset Password">
-        <http:inbound-endpoint exchange-pattern="request-response"
-            host="${http.host}" port="${http.port}" path="demo/api/reset-password"
-            doc:name="HTTP" />
+        <https:inbound-endpoint exchange-pattern="request-response"
+            connector-ref="httpsConnector" host="${https.host}" port="${https.port}"
+            path="demo/api/reset-password" doc:name="HTTPS" />
 
         <http:body-to-parameter-map-transformer
             doc:name="Body to Parameter Map" />
@@ -114,8 +121,9 @@ http://www.mulesoft.org/schema/mule/stormpath http://www.mulesoft.org/schema/mul
     </flow>
 
     <flow name="homePage" doc:name="homePage">
-        <http:inbound-endpoint exchange-pattern="request-response"
-            host="${http.host}" port="${http.port}" path="demo" doc:name="HTTP" />
+        <https:inbound-endpoint exchange-pattern="request-response"
+            connector-ref="httpsConnector" host="${https.host}" port="${https.port}" path="demo"
+            doc:name="HTTPS" />
         <http:static-resource-handler resourceBase="${app.home}/docroot"
             defaultFile="index.html" doc:name="HTTP Static Resource Handler" />
     </flow>
